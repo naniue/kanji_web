@@ -1,0 +1,1706 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>介護福祉士漢字学習</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --accent: #0f6b4d;
+      --accent-hover: #0d5940;
+      --accent-soft: #f3f4f6;
+      --border: #e5e7eb;
+      --bubble: #fafafa;
+      --danger: #b45309;
+      --ok: #0f6b4d;
+      --shadow: rgba(15, 23, 42, 0.06);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Sans", "Noto Sans JP", "Noto Sans SC", "PingFang SC", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      padding: 16px;
+      padding-bottom: 96px;
+      font-size: 15px;
+    }
+    body.dock-hidden { padding-bottom: 20px; }
+    .wrap { max-width: 720px; margin: 0 auto; }
+    .view { display: none; }
+    .view.active { display: block; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 3px var(--shadow);
+    }
+    .card-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .card-tools { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
+    .app-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+      width: 100%;
+    }
+    .app-tab {
+      flex: 1 1 auto;
+      min-width: 5.5rem;
+      border: 1px solid var(--border);
+      background: var(--card);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 0.88rem;
+      cursor: pointer;
+      color: var(--muted);
+      font-weight: 500;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .app-tab:hover { border-color: var(--text); color: var(--text); }
+    .app-tab.active {
+      background: var(--card);
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+    .zoom-bar { display: flex; align-items: center; gap: 4px; }
+    .zoom-bar button {
+      border: 1px solid var(--border);
+      background: var(--card);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      color: var(--text);
+      min-width: 2.2em;
+    }
+    .zoom-bar button:hover { border-color: var(--text); color: var(--text); }
+    #zoomLabel { min-width: 3rem; text-align: center; font-size: 0.8rem; color: var(--muted); }
+    .lang-bar { display: flex; gap: 6px; flex-shrink: 0; }
+    .lang-bar button {
+      border: 1px solid var(--border);
+      background: var(--card);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      color: var(--text);
+    }
+    .lang-bar button:hover { border-color: var(--text); color: var(--text); }
+    .lang-bar button.active { border-color: var(--accent); background: var(--card); color: var(--accent); font-weight: 600; }
+    h1 { font-size: 1.25rem; margin: 0 0 6px; font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
+    .sub { color: var(--muted); font-size: 0.86rem; margin: 0; max-width: 640px; }
+    .view-title { font-size: 1.05rem; font-weight: 700; margin: 0 0 12px; color: var(--text); }
+    .viz {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      width: 100%;
+      min-height: 280px;
+      padding: 16px 8px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      overflow-x: auto;
+    }
+    .viz-side {
+      flex: 1 1 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-width: 0;
+      max-width: 36%;
+    }
+    .viz-side-label {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-bottom: 2px;
+      text-align: center;
+      line-height: 1.3;
+    }
+    .viz-center-wrap { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .main-bubble {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      background: var(--card);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      box-shadow: 0 4px 16px var(--shadow);
+    }
+    .main-hv { font-size: 0.9rem; color: var(--muted); margin-bottom: 4px; }
+    .main-word { font-size: 2rem; font-weight: 700; letter-spacing: 0.05em; }
+    .mini {
+      width: 100%;
+      max-width: 120px;
+      min-height: 72px;
+      padding: 10px 8px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bubble);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      text-align: center;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .mini:hover { transform: scale(1.02); box-shadow: 0 4px 14px var(--shadow); border-color: #9ca3af; }
+    .mini .mini-hv { font-size: 0.75rem; color: var(--muted); margin-bottom: 4px; order: 1; }
+    .mini .mini-word { font-size: 1.28rem; font-weight: 700; order: 2; }
+    .viz-legend { font-size: 0.72rem; color: var(--muted); text-align: center; margin-top: 8px; }
+    .dock-nav {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 100;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border);
+      box-shadow: 0 -4px 20px var(--shadow);
+      padding: 10px 16px 14px;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+    }
+    .dock-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px 12px; width: 100%; max-width: 720px; }
+    .dock-cluster { display: flex; align-items: center; gap: 8px; }
+    .dock-cluster.dock-center { flex: 1 1 auto; justify-content: center; flex-wrap: nowrap; }
+    .dock-auto { display: flex; align-items: center; gap: 4px; font-size: 0.72rem; color: var(--muted); cursor: pointer; user-select: none; }
+    .dock-auto input { margin: 0; cursor: pointer; }
+    .btn-tts { min-width: 4em; font-weight: 600; }
+    .dock-row .dock-main {
+      min-width: 11em; font-weight: 600;
+      border-color: var(--accent);
+      background: var(--card);
+      color: var(--accent);
+    }
+    .dock-row .dock-main:hover:not(:disabled) { background: var(--accent-soft); }
+    .dock-hint { margin: 0; font-size: 0.7rem; color: var(--muted); text-align: center; max-width: 520px; }
+    button, .btnlike {
+      border: 1px solid var(--border);
+      background: var(--card);
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      color: var(--text);
+    }
+    button:hover:not(:disabled) { border-color: var(--text); color: var(--text); background: var(--accent-soft); }
+    button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    button.primary:hover:not(:disabled) { background: var(--accent-hover); color: #fff; }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+    .out {
+      margin-top: 10px; padding: 10px 12px; border-radius: 10px;
+      border: 1px solid var(--border); background: var(--bubble);
+      min-height: 44px; font-size: 0.92rem;
+    }
+    .out.interactive-flash { animation: fout 0.28s ease; }
+    @keyframes fout { from { opacity: 0.55; } to { opacity: 1; } }
+    .section-title { font-size: 0.92rem; font-weight: 600; margin: 0 0 8px; color: var(--muted); }
+    .rel-head { font-size: 0.86rem; font-weight: 600; margin: 0 0 8px; color: var(--muted); }
+    .rel-list { display: flex; flex-wrap: wrap; gap: 6px; max-height: 140px; overflow-y: auto; padding: 2px; }
+    .rel-pill {
+      border: 1px solid var(--border); background: var(--card); border-radius: 999px;
+      padding: 5px 10px; font-size: 0.82rem; cursor: pointer;
+    }
+    .rel-pill:hover { border-color: var(--text); color: var(--text); }
+    .toolbar-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); width: 100%; }
+    .search-wrap { position: relative; flex: 1 1 180px; max-width: 100%; }
+    .search-wrap input[type="search"] {
+      width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 0.9rem; background: var(--card);
+    }
+    .search-dropdown {
+      position: absolute; left: 0; right: 0; top: calc(100% + 4px);
+      max-height: 220px; overflow-y: auto; background: #fff; border: 1px solid var(--border);
+      border-radius: 10px; box-shadow: 0 8px 24px var(--shadow); z-index: 200;
+    }
+    .search-item { display: block; width: 100%; text-align: left; padding: 8px 12px; border: none; border-bottom: 1px solid var(--border); background: #fff; cursor: pointer; font-size: 0.88rem; }
+    .search-item:last-child { border-bottom: none; }
+    .search-item:hover { background: var(--accent-soft); }
+    .search-item small { display: block; color: var(--muted); font-size: 0.76rem; margin-top: 2px; }
+    .btn-fav { font-size: 1.2rem; line-height: 1; padding: 6px 12px; border-radius: 10px; }
+    .btn-fav.is-on { color: #b45309; border-color: #fbbf24; background: #fffbeb; }
+    .fav-only { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--muted); cursor: pointer; user-select: none; }
+    .count-badge { font-size: 0.75rem; color: var(--muted); font-weight: normal; }
+    .quiz-hv {
+      font-size: 1.75rem; font-weight: 700; text-align: center; color: var(--text);
+      padding: 20px 16px; background: var(--bubble); border: 1px solid var(--border);
+      border-radius: 12px; margin-bottom: 14px; letter-spacing: 0.04em;
+    }
+    .quiz-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .quiz-toolbar label { display: flex; align-items: center; gap: 6px; font-size: 0.82rem; color: var(--muted); cursor: pointer; }
+    .quiz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .quiz-opt {
+      padding: 16px 12px; font-size: 1.35rem; font-weight: 700; border-radius: 12px;
+      border: 2px solid var(--border); background: var(--card); cursor: pointer; min-height: 64px;
+    }
+    .quiz-opt:hover:not(:disabled) { border-color: var(--text); background: var(--bubble); }
+    .quiz-opt.correct { border-color: var(--ok); background: #f0fdf4; color: var(--ok); }
+    .quiz-opt.wrong { border-color: #dc2626; background: #fef2f2; }
+    .quiz-opt:disabled { cursor: default; opacity: 1; }
+    .quiz-feedback { min-height: 1.5em; margin-top: 12px; font-size: 0.9rem; color: var(--muted); text-align: center; }
+    .quiz-feedback.ok { color: var(--ok); font-weight: 600; }
+    .quiz-feedback.bad { color: #b91c1c; }
+    .form-stack label { display: block; font-size: 0.8rem; color: var(--muted); margin-bottom: 4px; margin-top: 12px; }
+    .form-stack label:first-of-type { margin-top: 0; }
+    .form-stack input[type="text"], .form-stack textarea {
+      width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px;
+      font-size: 0.92rem; font-family: inherit; background: var(--card);
+    }
+    .form-stack textarea { min-height: 88px; resize: vertical; line-height: 1.5; }
+    .form-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; align-items: center; }
+    .bottom-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .bottom-links button { font-size: 0.82rem; }
+    .lib-custom, .lib-all-list { max-height: 140px; }
+    details.lib-all summary { cursor: pointer; font-weight: 600; margin: 10px 0 6px; color: var(--muted); }
+    .meta-line { font-size: 0.78rem; color: var(--muted); margin: 0; }
+    @media (max-width: 640px) {
+      .viz { flex-wrap: wrap; justify-content: center; }
+      .viz-side { max-width: 45%; }
+      .quiz-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="card">
+      <div class="card-head">
+        <div style="flex:1 1 220px;">
+          <h1 id="appTitle">介護福祉士漢字学習</h1>
+          <p class="sub" id="introText"></p>
+          <nav class="app-tabs" id="appTabs" aria-label="App pages">
+            <button type="button" class="app-tab active" data-view="home" id="tabHome"></button>
+            <button type="button" class="app-tab" data-view="quiz" id="tabQuiz"></button>
+            <button type="button" class="app-tab" data-view="add" id="tabAdd"></button>
+          </nav>
+        </div>
+        <div class="card-tools">
+          <div class="zoom-bar" role="group" aria-label="Zoom">
+            <button type="button" id="zoomOut" title=""></button>
+            <span id="zoomLabel"></span>
+            <button type="button" id="zoomIn" title=""></button>
+          </div>
+          <div class="lang-bar" role="group" aria-label="Language">
+            <button type="button" data-set-lang="zh" class="active">中文</button>
+            <button type="button" data-set-lang="ja">日本語</button>
+            <button type="button" data-set-lang="vi">Tiếng Việt</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div id="viewHome" class="view active" data-view="home">
+      <section class="card">
+        <div class="toolbar-row">
+          <div class="search-wrap">
+            <input type="search" id="searchInput" placeholder="" autocomplete="off" />
+            <div id="searchDropdown" class="search-dropdown" hidden></div>
+          </div>
+          <button type="button" id="btnToggleFav" class="btn-fav" title="" aria-pressed="false">☆</button>
+          <label class="fav-only"><input type="checkbox" id="chkFavOnly" /> <span id="lblFavOnly"></span></label>
+        </div>
+      </section>
+      <section class="card">
+        <div id="viz" class="viz" aria-live="off"></div>
+        <p class="viz-legend" id="vizLegend"></p>
+        <div id="output" class="out"></div>
+      </section>
+      <section class="card">
+        <p class="rel-head"><span id="relLabel"></span> <span class="count-badge" id="relCount"></span></p>
+        <div id="relList" class="rel-list"></div>
+      </section>
+      <section class="card">
+        <p class="section-title" id="favSectionTitle"></p>
+        <p class="sub" id="favSectionHint" style="margin:0 0 8px;font-size:0.8rem;"></p>
+        <div id="favList" class="rel-list"></div>
+      </section>
+      <p class="meta-line" id="metaLine"></p>
+    </div>
+
+    <div id="viewQuiz" class="view" data-view="quiz">
+      <section class="card">
+        <p class="view-title" id="quizTitle"></p>
+        <p class="sub" id="quizIntro"></p>
+        <div class="quiz-hv" id="quizHvPrompt">—</div>
+        <div class="quiz-toolbar">
+          <label><input type="checkbox" id="chkQuizAutoSpeak" checked /> <span id="lblQuizAutoSpeak"></span></label>
+          <button type="button" id="btnQuizReplayHv"></button>
+          <button type="button" id="btnQuizNext" class="primary"></button>
+        </div>
+        <div class="quiz-grid" id="quizOptions"></div>
+        <p class="quiz-feedback" id="quizFeedback" aria-live="polite"></p>
+        <div class="bottom-links" id="quizBottomNav"></div>
+      </section>
+    </div>
+
+    <div id="viewAdd" class="view" data-view="add">
+      <section class="card">
+        <p class="view-title" id="addPageTitle"></p>
+        <p class="sub" id="addPageHint"></p>
+        <div class="form-stack">
+          <label for="addWord" id="labFormWord"></label>
+          <input type="text" id="addWord" autocomplete="off" />
+          <label for="addHv" id="labFormHv"></label>
+          <input type="text" id="addHv" autocomplete="off" />
+          <label for="addOn" id="labFormOn"></label>
+          <input type="text" id="addOn" autocomplete="off" />
+          <label for="formTaJa" id="labFormJa"></label>
+          <textarea id="formTaJa" spellcheck="false" autocomplete="off"></textarea>
+          <label for="formTaVi" id="labFormVi"></label>
+          <textarea id="formTaVi" spellcheck="false" autocomplete="off"></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" id="btnLoadCurrentWord"></button>
+          <button type="button" id="btnSaveEntry" class="primary"></button>
+        </div>
+        <p class="sub" id="libCustomHint" style="margin:12px 0 0;font-size:0.8rem;"></p>
+        <div id="customList" class="rel-list lib-custom" style="margin-top:8px;"></div>
+        <details class="lib-all">
+          <summary id="libAllSummary"></summary>
+          <div id="allWordList" class="rel-list lib-all-list"></div>
+        </details>
+        <div class="bottom-links" id="addBottomNav"></div>
+      </section>
+    </div>
+  </div>
+
+  <nav class="dock-nav" id="dockNav" aria-label="Navigation">
+    <div class="dock-row">
+      <div class="dock-cluster dock-left">
+        <button type="button" id="btnSpeakVn" class="btn-tts" title=""></button>
+        <label class="dock-auto"><input type="checkbox" id="chkAutoVn" checked /> <span id="lblAutoVn"></span></label>
+      </div>
+      <div class="dock-cluster dock-center">
+        <button type="button" id="btnPrev"></button>
+        <button type="button" id="btnNext" class="dock-main"></button>
+        <button type="button" id="btnFirst"></button>
+      </div>
+      <div class="dock-cluster dock-right">
+        <button type="button" id="btnSpeakJa" class="btn-tts" title=""></button>
+      </div>
+    </div>
+    <p class="dock-hint" id="dockHint"></p>
+  </nav>
+
+  <script src="vocab-data.js"></script>
+  <script>
+(function () {
+  const DATA = window.VOCAB_DATA;
+  if (!DATA || !DATA.entries || !DATA.entries.length) {
+    document.body.innerHTML = "<p>缺少 vocab-data.js，请与本页面放在同一目录。</p>";
+    return;
+  }
+
+  const PH = "\u25ef";
+
+  const I18N = {
+    zh: {
+      htmlLang: "zh-Hans",
+      docTitle: "介護福祉士漢字学習",
+      intro: "左列：主词首字延伸的两字词 · 右列：末字延伸 · 小气泡与中央版式相同（上汉越音、下汉字）。",
+      legend: "◯ 仅用于点击后的构成说明；气泡内为完整两字词。",
+      btnPrev: "上一个",
+      btnNext: "下一个（本轮不重复）",
+      btnFirst: "回到首词",
+      dockShortcuts: "快捷键：← / ↑ 上一个｜Space / → / ↓ 下一个 · 底栏：越语朗读（可自动）· 日语点击朗读",
+      outputHint: "点击左/右列气泡可跳转到该词为主词；仅「下一个」会记入本轮已读。",
+      relTitle: "关联词列表",
+      relAfterMini: "（点小气泡后按字列出）",
+      relEmpty: "词表内没有其他词包含该字。",
+      relForChar: "汉字「{ch}」在本词表中的其他词",
+      relPillTip: "单击查看 · 双击跳转为主词",
+      tabHome: "主页",
+      tabQuiz: "单词测试",
+      tabAdd: "新词",
+      quizTitle: "听汉越音，选汉字词",
+      quizIntro: "听朗读的汉越音，在四个相似的两字词里点选正确的一项。",
+      lblQuizAutoSpeak: "出题时自动朗读汉越音",
+      btnQuizReplayHv: "再听一遍",
+      btnQuizNext: "下一题",
+      quizCorrect: "正确。",
+      quizWrong: "再试一次或点下一题。",
+      quizNotEnough: "两字词不足，无法出题。",
+      addPageTitle: "词条与说明",
+      addPageHint: "可新增词，或为已有词保存说明（保存在本机）。新词须填汉字与汉越音。",
+      labFormWord: "汉字词",
+      labFormHv: "汉越音",
+      labFormOn: "日语读音（可选）",
+      labFormJa: "やさしい日本語",
+      labFormVi: "越南语说明",
+      btnLoadCurrentWord: "填入主页当前词",
+      btnSaveEntry: "保存",
+      navToHome: "主页",
+      navToQuiz: "测试",
+      navToAdd: "新词",
+      needWordW: "请填写汉字词。",
+      addWordPh: "例：愛情",
+      addHvPh: "例：ái tình",
+      addOnPh: "例：あいじょう",
+      metaTpl: "词表条目数：{n}",
+      btnSpeakVn: "朗读 越",
+      btnSpeakJa: "朗读 日",
+      lblAutoVn: "切换词自动越读",
+      zoomOut: "缩小",
+      zoomIn: "放大",
+      lblLeft: "← 来自主词「首字」",
+      lblRight: "来自主词「末字」→",
+      lblRightSame: "（首尾同字：延伸词见左列）",
+      vizHintPrefix: "当前：",
+      vizHintKanjiOk: "左/右列与中央版式一致（越南语在上）。",
+      vizHintKanjiFew: "本词汉字不足两字，暂无左右列表。",
+      flashPillFmt: "<strong>{w}</strong>（汉越音：{hv}）",
+      flashMiniFmt:
+        "<strong>{w}</strong>（汉越音：{hv}）<br/><span style=\"font-size:0.88rem;color:#5c6578;display:inline-block;margin-top:6px;\">构成：{pat} （◯ = 主词「{main}」的「{a}」）</span>",
+      searchPlaceholder: "日语读音、越南语或汉字…",
+      libCustomHint: "自定义词保存在本机浏览器，会参与左右列联想与搜索。",
+      libAllSummary: "展开：完整词表（可点击跳转）",
+      btnDeleteCustom: "删除",
+      favSectionTitle: "我的收藏",
+      favSectionHint: "点击词条翻到该词；可在上方「下一个」配合「仅在收藏中」轮换。",
+      favEmpty: "暂无收藏。点星形按钮收藏当前词。",
+      favToggleTitle: "收藏 / 取消收藏",
+      lblFavOnly: "下一个：仅在收藏中轮换",
+      needWordHv: "请填写汉字词与汉越音。",
+      dupWordErr: "该词已在词表中。",
+    },
+    ja: {
+      htmlLang: "ja",
+      docTitle: "介護福祉士漢字学習",
+      intro:
+        "左：語頭の漢字からつながる二文字語／右：語末から。気泡は中央と同じ（上：ハンベト読み、下：漢字）。",
+      legend:
+        "◯ は説明でのみ使用。気泡には熟語そのものが表示されます。",
+      btnPrev: "前へ",
+      btnNext: "次へ（このラウンドでは重複なし）",
+      btnFirst: "先頭へ",
+      dockShortcuts:
+        "← / ↑ 前へ｜Space / → / ↓ 次へ · 下：ベトナム語読み（自動可）· 日本語はボタンで",
+      outputHint:
+        "左右の気泡はその語へジャンプします。「次」だけがラウンド記録されます。",
+      relTitle: "関連語リスト",
+      relAfterMini: "（小さい気泡を選ぶと、この字で絞ります）",
+      relEmpty: "この字を含む他の語がありません。",
+      relForChar: "「{ch}」を含む他の語",
+      relPillTip: "シングルクリックで表示／ダブルで主語へ",
+      tabHome: "ホーム",
+      tabQuiz: "テスト",
+      tabAdd: "新語",
+      quizTitle: "ハンベトを聞いて漢字語を選ぶ",
+      quizIntro: "読まれたハンベトに合う二文字語を、似た四択から選びます。",
+      lblQuizAutoSpeak: "出題時にハンベトを自動再生",
+      btnQuizReplayHv: "もう一度聞く",
+      btnQuizNext: "次の問題",
+      quizCorrect: "正解です。",
+      quizWrong: "別の語を選ぶか、次へ。",
+      quizNotEnough: "二文字語が不足しています。",
+      addPageTitle: "語とメモ",
+      addPageHint: "自作語を追加したり、既存語にメモを保存（端末のみ）。新語は漢字とハンベトが必要。",
+      labFormWord: "語（漢字）",
+      labFormHv: "ハンベト",
+      labFormOn: "日本語読み（任意）",
+      labFormJa: "やさしい日本語",
+      labFormVi: "ベトナム語の説明",
+      btnLoadCurrentWord: "ホームの語を反映",
+      btnSaveEntry: "保存",
+      navToHome: "ホーム",
+      navToQuiz: "テスト",
+      navToAdd: "新語",
+      needWordW: "漢字の語を入力してください。",
+      metaTpl: "収録項目数：{n}",
+      btnSpeakVn: "越 よむ",
+      btnSpeakJa: "日 よむ",
+      lblAutoVn: "語が変わったら越語",
+      zoomOut: "小さく",
+      zoomIn: "大きく",
+      lblLeft: "← 頭字から",
+      lblRight: "末字から →",
+      lblRightSame: "（頭末同一字・左参照）",
+      vizHintPrefix: "現在の語：",
+      vizHintKanjiOk: "左右のレイアウトは中央と同じです。",
+      vizHintKanjiFew: "漢字が二つに満たないため、リストなし。",
+      flashPillFmt: "<strong>{w}</strong>（ハンベト：{hv}）",
+      flashMiniFmt:
+        "<strong>{w}</strong>（ハンベト：{hv}）<br/><span style=\"font-size:0.88rem;color:#5c6578;display:inline-block;margin-top:6px;\">{pat}（◯＝題「{main}」の「{a}」）</span>",
+      searchPlaceholder: "読み・ベトナム語・漢字…",
+      addWordPh: "例：愛情",
+      addHvPh: "例：ái tình / 読み",
+      addOnPh: "読み（任意）",
+      libCustomHint: "自作語はブラウザに保存され、検索・連想に含まれます。",
+      libAllSummary: "開く：全語一覧（クリックでジャンプ）",
+      btnDeleteCustom: "削除",
+      favSectionTitle: "お気に入り",
+      favSectionHint: "語をクリックで表示。「次へ」＋「お気に入りのみ」で巡回できます。",
+      favEmpty: "お気に入りなし。星で追加。",
+      favToggleTitle: "お気に入りに追加／解除",
+      lblFavOnly: "「次へ」はお気に入りのみ",
+      needWordHv: "語とハンベト読みを入力してください。",
+      dupWordErr: "すでに語彙にあります。",
+    },
+    vi: {
+      htmlLang: "vi",
+      docTitle: "介護福祉士漢字学習",
+      intro:
+        "Trái: cụm hai chữ từ chữ đầu · Phải: từ chữ cuối. Bọt nhỏ giống giữa: trên là Hán-Việt, dưới là chữ Hán.",
+      legend: "◯ chỉ trong phần giải thích. Trong bọt là cả cụm hai chữ.",
+      btnPrev: "Trước",
+      btnNext: "Tiếp (không lặp lại vòng này)",
+      btnFirst: "Về đầu danh sách",
+      dockShortcuts:
+        "Phím: ← / ↑ trước｜Space / → / ↓ tiếp · Dưới: đọc Hán-Việt (tự động tắt/bật) · Tiếng Nhật bấm nút",
+      outputHint:
+        "Bọt hai bên nhảy sang từ đó làm từ chính. Chỉ nút Tiếp mới ghi vòng học.",
+      relTitle: "Danh sách liên quan",
+      relAfterMini: "（chọn bọt nhỏ rồi lọc theo chữ）",
+      relEmpty: "Không còn từ khác chứa chữ này trong bộ từ vựng.",
+      relForChar: "Chữ 「{ch}」 — các từ khác trong bộ từ",
+      relPillTip: "Một click xem · Đôi click nhảy làm từ chính",
+      tabHome: "Trang chính",
+      tabQuiz: "Kiểm tra",
+      tabAdd: "Từ mới",
+      quizTitle: "Nghe Hán-Việt, chọn cụm chữ",
+      quizIntro: "Nghe đọc Hán-Việt và chọn đúng cụm hai chữ trong bốn lựa chọn gần giống.",
+      lblQuizAutoSpeak: "Tự đọc Hán-Việt khi ra câu",
+      btnQuizReplayHv: "Nghe lại",
+      btnQuizNext: "Câu sau",
+      quizCorrect: "Đúng.",
+      quizWrong: "Chưa đúng — thử lại hoặc câu sau.",
+      quizNotEnough: "Không đủ từ hai chữ để ra câu.",
+      addPageTitle: "Mục từ & ghi chú",
+      addPageHint: "Thêm từ tự soạn hoặc lưu ghi chú cho từ có sẵn（chỉ trên máy bạn）. Từ mới cần chữ Hán và Hán-Việt.",
+      labFormWord: "Từ Hán",
+      labFormHv: "Hán-Việt",
+      labFormOn: "Đọc tiếng Nhật（tuỳ chọn）",
+      labFormJa: "やさしい日本語",
+      labFormVi: "Giải thích tiếng Việt",
+      btnLoadCurrentWord: "Lấy từ trang chính",
+      btnSaveEntry: "Lưu",
+      navToHome: "Trang chính",
+      navToQuiz: "Kiểm tra",
+      navToAdd: "Từ mới",
+      needWordW: "Nhập chữ Hán.",
+      metaTpl: "Số mục trong bộ từ: {n}",
+      btnSpeakVn: "Đọc VI",
+      btnSpeakJa: "Đọc JA",
+      lblAutoVn: "Tự đọc Hán-Việt",
+      zoomOut: "Thu nhỏ",
+      zoomIn: "Phóng to",
+      lblLeft: "← Từ chữ đầu",
+      lblRight: "Từ chữ cuối →",
+      lblRightSame: "（đầu-cuối trùng chữ — xem cột trái）",
+      vizHintPrefix: "Đang học:",
+      vizHintKanjiOk: "Khối trái/phải cùng kiểu bố cục (Hán-Việt phía trên).",
+      vizHintKanjiFew: "Chưa đủ hai chữ Hán nên không có cột hai bên.",
+      flashPillFmt: "<strong>{w}</strong>（Hán-Việt：{hv}）",
+      flashMiniFmt:
+        "<strong>{w}</strong>（Hán-Việt：{hv}）<br/><span style=\"font-size:0.88rem;color:#5c6578;display:inline-block;margin-top:6px;\">{pat}（◯ = chữ 「{a}」trong chủ từ「{main}」）</span>",
+      searchPlaceholder: "Đọc Nhật, tiếng Việt hoặc chữ Hán…",
+      addWordPh: "VD: 愛情",
+      addHvPh: "VD: ái tình",
+      addOnPh: "VD: あいじょう",
+      libCustomHint: "Từ tự thêm lưu trong trình duyệt, dùng cho tìm kiếm và liên tưởng.",
+      libAllSummary: "Mở rộng: toàn bộ danh sách (bấm để nhảy)",
+      btnDeleteCustom: "Xoá",
+      favSectionTitle: "Mục yêu thích",
+      favSectionHint: "Bấm từ để mở. Chọn Tiếp + chỉ yêu thích để xoay trong sổ tay.",
+      favEmpty: "Chưa có mục yêu thích. Bấm ngôi sao để lưu từ hiện tại.",
+      favToggleTitle: "Thêm / bỏ yêu thích",
+      lblFavOnly: "Tiếp theo: chỉ trong yêu thích",
+      needWordHv: "Nhập chữ Hán và Hán-Việt.",
+      dupWordErr: "Từ đã có trong danh sách.",
+    },
+  };
+
+  let lang = localStorage.getItem("kanjiLearnLang") || "zh";
+  if (!I18N[lang]) lang = "zh";
+
+  var currentView = localStorage.getItem("kanjiLearnView") || "home";
+
+  function t(key, vars) {
+    var s = (I18N[lang] && I18N[lang][key]) || (I18N.zh && I18N.zh[key]) || key;
+    if (vars) {
+      Object.keys(vars).forEach(function (k) {
+        s = s.split("{" + k + "}").join(String(vars[k]));
+      });
+    }
+    return s;
+  }
+
+  document.querySelectorAll("[data-set-lang]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      setLang(btn.getAttribute("data-set-lang"));
+    });
+  });
+
+  let entries = [];
+  let charIndex = {};
+
+  function normalizeHv(s) {
+    s = String(s || "").trim();
+    if (s.indexOf("/") >= 0) s = s.split("/")[0].trim();
+    return s.toLowerCase();
+  }
+
+  function kanjiChars(word) {
+    return Array.from(word || "").filter(function (ch) {
+      var c = ch.codePointAt(0);
+      return (c >= 0x4e00 && c <= 0x9fff) || ch === "\u3005";
+    });
+  }
+
+  function loadCustomEntries() {
+    try {
+      var x = JSON.parse(localStorage.getItem("kanjiLearnCustomEntries") || "[]");
+      return Array.isArray(x) ? x : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveCustomEntries(arr) {
+    localStorage.setItem("kanjiLearnCustomEntries", JSON.stringify(arr));
+  }
+
+  function hvTokens(hv) {
+    return String(hv || "")
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean);
+  }
+
+  function assignCharHv(word, hv) {
+    var chars = kanjiChars(word);
+    var tokens = hvTokens(normalizeHv(hv));
+    var out = [];
+    if (chars.length === 0) return out;
+    while (tokens.length < chars.length && tokens.length > 0) {
+      tokens.push(tokens[tokens.length - 1]);
+    }
+    if (tokens.length >= chars.length) {
+      for (var i = 0; i < chars.length; i++) {
+        out.push({ char: chars[i], hv: tokens[i].toLowerCase() });
+      }
+      return out;
+    }
+    if (tokens.length === 1 && chars.length > 1) {
+      var t0 = tokens[0].toLowerCase();
+      chars.forEach(function (ch) {
+        out.push({ char: ch, hv: t0 });
+      });
+      return out;
+    }
+    while (tokens.length < chars.length) {
+      tokens.push(tokens[tokens.length - 1] || "");
+    }
+    for (var j = 0; j < chars.length; j++) {
+      out.push({ char: chars[j], hv: (tokens[j] || "").toLowerCase() });
+    }
+    return out;
+  }
+
+  function buildCharIndexFromEntries(arr) {
+    var idx = {};
+    arr.forEach(function (e) {
+      var seen = {};
+      kanjiChars(e.word).forEach(function (ch) {
+        if (seen[ch]) return;
+        seen[ch] = true;
+        if (!idx[ch]) idx[ch] = [];
+        idx[ch].push({ id: e.id, word: e.word, hv: e.hv });
+      });
+    });
+    return idx;
+  }
+
+  function rebuildMergedState() {
+    var base = DATA.entries.map(function (e, i) {
+      return Object.assign({}, e, { id: i, customKey: null });
+    });
+    var raw = loadCustomEntries();
+    var custom = raw.map(function (r, idx) {
+      var w = (r.word || "").trim();
+      var hvRaw = r.hv || "";
+      return {
+        id: base.length + idx,
+        word: w,
+        hv: normalizeHv(hvRaw),
+        on: (r.on || "").trim(),
+        kanji: assignCharHv(w, hvRaw),
+        easyJa: r.easyJa || "",
+        customKey: r.key,
+      };
+    });
+    entries = base.concat(custom);
+    entries.forEach(function (e, i) {
+      e.id = i;
+    });
+    charIndex = buildCharIndexFromEntries(entries);
+  }
+
+  rebuildMergedState();
+
+  const viz = document.getElementById("viz");
+  const output = document.getElementById("output");
+  const relList = document.getElementById("relList");
+  const relLabel = document.getElementById("relLabel");
+  const relCount = document.getElementById("relCount");
+  const btnPrev = document.getElementById("btnPrev");
+  const chkAutoVn = document.getElementById("chkAutoVn");
+  const searchInput = document.getElementById("searchInput");
+  const searchDropdown = document.getElementById("searchDropdown");
+  const btnToggleFav = document.getElementById("btnToggleFav");
+  const chkFavOnly = document.getElementById("chkFavOnly");
+
+  let curId = 0;
+  let history = [0];
+  /** 仅「下一个」落地过的 id；小气泡/双击跳转不计入 */
+  let roundSeenIds = new Set();
+
+  var USER_NOTES_KEY = "kanjiLearnUserNotes";
+
+  function loadUserNotesMap() {
+    try {
+      var o = JSON.parse(localStorage.getItem(USER_NOTES_KEY) || "{}");
+      return o && typeof o === "object" ? o : {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function saveUserNotesMap(m) {
+    localStorage.setItem(USER_NOTES_KEY, JSON.stringify(m));
+  }
+
+  function getUserNote(word) {
+    var m = loadUserNotesMap();
+    var n = m[word];
+    if (!n || typeof n !== "object") return { ja: "", vi: "" };
+    return { ja: String(n.ja || ""), vi: String(n.vi || "") };
+  }
+
+  function persistFormNotes() {
+    var elW = document.getElementById("addWord");
+    var elJa = document.getElementById("formTaJa");
+    var elVi = document.getElementById("formTaVi");
+    if (!elW || !elJa || !elVi) return;
+    var w = elW.value.trim();
+    if (!w) return;
+    var ja = elJa.value;
+    var vi = elVi.value;
+    var m = loadUserNotesMap();
+    if (!ja && !vi) {
+      if (m[w]) {
+        delete m[w];
+        saveUserNotesMap(m);
+      }
+      return;
+    }
+    if (!m[w]) m[w] = {};
+    m[w].ja = ja;
+    m[w].vi = vi;
+    saveUserNotesMap(m);
+  }
+
+  function loadFormForWord(w) {
+    var elW = document.getElementById("addWord");
+    var elHv = document.getElementById("addHv");
+    var elOn = document.getElementById("addOn");
+    var elJa = document.getElementById("formTaJa");
+    var elVi = document.getElementById("formTaVi");
+    if (!elW) return;
+    elW.value = w;
+    var ix = entryIndexByWord(w);
+    if (ix >= 0) {
+      var e = entries[ix];
+      elHv.value = e.hv || "";
+      elOn.value = e.on || "";
+    } else {
+      elHv.value = "";
+      elOn.value = "";
+    }
+    var n = getUserNote(w);
+    elJa.value = n.ja;
+    elVi.value = n.vi;
+  }
+
+  var formJa = document.getElementById("formTaJa");
+  var formVi = document.getElementById("formTaVi");
+  formJa.addEventListener("input", persistFormNotes);
+  formVi.addEventListener("input", persistFormNotes);
+
+  function cancelSpeech() {
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+  }
+
+  function speakWithLang(text, lang, voicePrefix) {
+    if (!window.speechSynthesis || !text) return;
+    cancelSpeech();
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = lang;
+    var voices = speechSynthesis.getVoices();
+    for (var i = 0; i < voices.length; i++) {
+      if (voices[i].lang && voices[i].lang.indexOf(voicePrefix) === 0) {
+        u.voice = voices[i];
+        break;
+      }
+    }
+    speechSynthesis.speak(u);
+  }
+
+  function speakVietnamese(hv) {
+    speakWithLang(hv, "vi-VN", "vi");
+  }
+
+  function speakJapanese(on) {
+    speakWithLang(on || "", "ja-JP", "ja");
+  }
+
+  const ZOOM_PCTS = [80, 90, 100, 110, 125, 140, 160];
+  var zoomIdx = parseInt(localStorage.getItem("pageZoomIdx") || "2", 10);
+  if (isNaN(zoomIdx) || zoomIdx < 0 || zoomIdx >= ZOOM_PCTS.length) zoomIdx = 2;
+
+  function applyZoom() {
+    document.documentElement.style.fontSize = "";
+    var pct = ZOOM_PCTS[zoomIdx];
+    document.documentElement.style.zoom = String(pct) + "%";
+    document.getElementById("zoomLabel").textContent = pct + "%";
+    localStorage.setItem("pageZoomIdx", String(zoomIdx));
+  }
+
+  function loadFavorites() {
+    try {
+      var x = JSON.parse(localStorage.getItem("kanjiLearnFavorites") || "[]");
+      return Array.isArray(x) ? x : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveFavorites(words) {
+    localStorage.setItem("kanjiLearnFavorites", JSON.stringify(words));
+  }
+
+  function entryIndexByWord(word) {
+    for (var i = 0; i < entries.length; i++) {
+      if (entries[i].word === word) return i;
+    }
+    return -1;
+  }
+
+  function updateFavButton() {
+    var it = entries[curId];
+    if (!it) return;
+    var on = loadFavorites().indexOf(it.word) >= 0;
+    btnToggleFav.textContent = on ? "\u2605" : "\u2606";
+    btnToggleFav.classList.toggle("is-on", on);
+    btnToggleFav.setAttribute("aria-pressed", on ? "true" : "false");
+  }
+
+  function renderFavList() {
+    var list = document.getElementById("favList");
+    list.innerHTML = "";
+    var words = loadFavorites();
+    if (words.length === 0) {
+      var p = document.createElement("p");
+      p.className = "sub";
+      p.style.margin = "0";
+      p.textContent = t("favEmpty");
+      list.appendChild(p);
+      return;
+    }
+    words.forEach(function (word) {
+      var idx = entryIndexByWord(word);
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "rel-pill";
+      b.textContent = word + (idx < 0 ? "" : " · " + entries[idx].hv);
+      b.addEventListener("click", function () {
+        if (idx >= 0) {
+          searchDropdown.hidden = true;
+          goToEntry(idx, true);
+        }
+      });
+      list.appendChild(b);
+    });
+  }
+
+  function renderCustomList() {
+    var box = document.getElementById("customList");
+    box.innerHTML = "";
+    var raw = loadCustomEntries();
+    if (raw.length === 0) {
+      var p = document.createElement("p");
+      p.className = "sub";
+      p.style.margin = "0";
+      p.textContent = "\u2014";
+      box.appendChild(p);
+      return;
+    }
+    raw.forEach(function (r) {
+      var row = document.createElement("div");
+      row.className = "rel-pill";
+      row.style.display = "inline-flex";
+      row.style.alignItems = "center";
+      row.style.gap = "6px";
+      row.style.cursor = "default";
+      var lab = document.createElement("span");
+      lab.textContent = r.word + " · " + normalizeHv(r.hv || "");
+      var del = document.createElement("button");
+      del.type = "button";
+      del.textContent = t("btnDeleteCustom");
+      del.style.fontSize = "0.75rem";
+      del.style.padding = "2px 8px";
+      del.addEventListener("click", function (e) {
+        e.stopPropagation();
+        var next = loadCustomEntries().filter(function (x) {
+          return x.key !== r.key;
+        });
+        saveCustomEntries(next);
+        rebuildMergedState();
+        if (curId >= entries.length) curId = entries.length - 1;
+        renderViz();
+        renderCustomList();
+        renderAllWordList();
+        document.getElementById("metaLine").textContent = t("metaTpl", { n: entries.length });
+      });
+      row.appendChild(lab);
+      row.appendChild(del);
+      box.appendChild(row);
+    });
+  }
+
+  function renderAllWordList() {
+    var box = document.getElementById("allWordList");
+    box.innerHTML = "";
+    entries.forEach(function (e, i) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "rel-pill";
+      b.textContent = e.word + " · " + e.hv;
+      b.addEventListener("click", function () {
+        searchDropdown.hidden = true;
+        goToEntry(i, true);
+      });
+      box.appendChild(b);
+    });
+  }
+
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function closeSearchDropdown() {
+    searchDropdown.hidden = true;
+  }
+
+  function runSearchQuery() {
+    var q = searchInput.value.trim();
+    if (!q) {
+      closeSearchDropdown();
+      return;
+    }
+    var ql = q.toLowerCase();
+    var idxs = [];
+    for (var i = 0; i < entries.length; i++) {
+      var e = entries[i];
+      if (e.word.indexOf(q) >= 0) idxs.push(i);
+      else if (e.on && e.on.toLowerCase().indexOf(ql) >= 0) idxs.push(i);
+      else if (e.hv.toLowerCase().indexOf(ql) >= 0) idxs.push(i);
+      if (idxs.length >= 30) break;
+    }
+    searchDropdown.innerHTML = "";
+    if (idxs.length === 0) {
+      searchDropdown.hidden = true;
+      return;
+    }
+    idxs.forEach(function (i) {
+      var e = entries[i];
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "search-item";
+      btn.innerHTML =
+        "<strong>" +
+        escapeHtml(e.word) +
+        "</strong><small>" +
+        escapeHtml((e.on || "") + " · " + e.hv) +
+        "</small>";
+      btn.addEventListener("click", function () {
+        searchInput.value = "";
+        closeSearchDropdown();
+        goToEntry(i, true);
+      });
+      searchDropdown.appendChild(btn);
+    });
+    searchDropdown.hidden = false;
+  }
+
+  function getRelatedForChar(ch, excludeId) {
+    return (charIndex[ch] || []).filter(function (it) {
+      return it.id !== excludeId;
+    });
+  }
+
+  function hvForCharInEntry(entry, ch) {
+    if (!entry || !entry.kanji) return "";
+    const row = entry.kanji.filter(function (k) {
+      return k.char === ch;
+    })[0];
+    return row ? row.hv : "";
+  }
+
+  function compoundPattern(anchorChar, compoundWord) {
+    const ks = kanjiChars(compoundWord);
+    if (ks.length !== 2) return compoundWord;
+    if (ks[0] === anchorChar) return PH + ks[1];
+    if (ks[1] === anchorChar) return ks[0] + PH;
+    return compoundWord;
+  }
+
+  function listAllTwoCharPartners(anchorChar, excludeId) {
+    const lst = charIndex[anchorChar] || [];
+    const cand = lst.filter(function (it) {
+      if (it.id === excludeId) return false;
+      const ks = kanjiChars(it.word);
+      return ks.length === 2 && ks.indexOf(anchorChar) >= 0;
+    });
+    cand.sort(function (a, b) {
+      const w = a.word.localeCompare(b.word, "ja");
+      if (w !== 0) return w;
+      return a.id - b.id;
+    });
+    return cand.map(function (it) {
+      const full = entries[it.id];
+      const ks = kanjiChars(it.word);
+      const partnerChar = ks[0] === anchorChar ? ks[1] : ks[0];
+      let partnerHv = hvForCharInEntry(full, partnerChar);
+      if (!partnerHv) partnerHv = "";
+      const pat = compoundPattern(anchorChar, it.word);
+      return {
+        anchorChar: anchorChar,
+        partnerChar: partnerChar,
+        partnerHv: partnerHv,
+        compoundWord: it.word,
+        compoundHv: it.hv,
+        compoundId: it.id,
+        pattern: pat,
+      };
+    });
+  }
+
+  function leftRightAnchors(mainEntry) {
+    const ks = kanjiChars(mainEntry.word);
+    if (ks.length <= 1) return { leftChar: null, rightChar: null };
+    return { leftChar: ks[0], rightChar: ks[ks.length - 1] };
+  }
+
+  function flashOutputInteractive(html) {
+    output.innerHTML = html;
+    output.classList.remove("interactive-flash");
+    void output.offsetWidth;
+    output.classList.add("interactive-flash");
+  }
+
+  function fmt(tpl, o) {
+    var s = tpl;
+    Object.keys(o).forEach(function (k) {
+      s = s.split("{" + k + "}").join(escapeHtml(o[k]));
+    });
+    return s;
+  }
+
+  function renderRelatedPills(ch) {
+    relList.innerHTML = "";
+    if (!ch) {
+      relLabel.textContent = t("relTitle");
+      relCount.textContent = "";
+      return;
+    }
+    const rel = getRelatedForChar(ch, curId);
+    relLabel.textContent = t("relForChar", { ch: ch });
+    relCount.textContent = "（" + rel.length + "）";
+    if (rel.length === 0) {
+      const p = document.createElement("p");
+      p.className = "sub";
+      p.style.margin = "0";
+      p.textContent = t("relEmpty");
+      relList.appendChild(p);
+      return;
+    }
+    rel.forEach(function (it) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "rel-pill";
+      b.textContent = it.word + " · " + it.hv;
+      b.title = t("relPillTip");
+      b.addEventListener("click", function () {
+        flashOutputInteractive(fmt(t("flashPillFmt"), { w: it.word, hv: it.hv }));
+      });
+      b.addEventListener("dblclick", function (e) {
+        e.preventDefault();
+        goToEntry(it.id, true);
+      });
+      relList.appendChild(b);
+    });
+  }
+
+  function makeMiniBubble(p, mainWordItem) {
+    const el = document.createElement("div");
+    el.className = "mini";
+    el.setAttribute("data-anchor", p.anchorChar);
+    el.innerHTML =
+      "<div class=\"mini-hv\">" +
+      escapeHtml(p.compoundHv) +
+      "</div><div class=\"mini-word\">" +
+      escapeHtml(p.compoundWord) +
+      "</div>";
+    el.title = p.pattern + " ← " + mainWordItem.word + " / " + p.anchorChar;
+    el.addEventListener("click", function () {
+      goToEntry(p.compoundId, true);
+    });
+    return el;
+  }
+
+  function renderViz() {
+    const item = entries[curId];
+    cancelSpeech();
+    viz.innerHTML = "";
+
+    const sideLeft = document.createElement("div");
+    sideLeft.className = "viz-side";
+    const lblL = document.createElement("div");
+    lblL.className = "viz-side-label";
+    lblL.textContent = t("lblLeft");
+    sideLeft.appendChild(lblL);
+
+    const centerWrap = document.createElement("div");
+    centerWrap.className = "viz-center-wrap";
+    const main = document.createElement("div");
+    main.className = "main-bubble";
+    main.innerHTML =
+      "<div class=\"main-hv\">" +
+      escapeHtml(item.hv) +
+      "</div><div class=\"main-word\">" +
+      escapeHtml(item.word) +
+      "</div>";
+    centerWrap.appendChild(main);
+
+    const sideRight = document.createElement("div");
+    sideRight.className = "viz-side";
+    const lblR = document.createElement("div");
+    lblR.className = "viz-side-label";
+    lblR.textContent = t("lblRight");
+    sideRight.appendChild(lblR);
+
+    const lr = leftRightAnchors(item);
+    const sameEnd = lr.leftChar && lr.rightChar && lr.leftChar === lr.rightChar;
+    if (lr.leftChar) {
+      listAllTwoCharPartners(lr.leftChar, item.id).forEach(function (p) {
+        sideLeft.appendChild(makeMiniBubble(p, item));
+      });
+    }
+    if (lr.rightChar && !sameEnd) {
+      listAllTwoCharPartners(lr.rightChar, item.id).forEach(function (p) {
+        sideRight.appendChild(makeMiniBubble(p, item));
+      });
+    } else if (sameEnd) {
+      lblR.textContent = t("lblRightSame");
+    }
+
+    viz.appendChild(sideLeft);
+    viz.appendChild(centerWrap);
+    viz.appendChild(sideRight);
+
+    output.classList.remove("interactive-flash");
+    const hint =
+      "<span style=\"color:#5c6578;font-size:0.92rem;\">" +
+      escapeHtml(t("vizHintPrefix")) +
+      " <strong>" +
+      escapeHtml(item.word) +
+      "</strong> — " +
+      escapeHtml(lr.leftChar || lr.rightChar ? t("vizHintKanjiOk") : t("vizHintKanjiFew")) +
+      "</span>";
+    output.innerHTML = hint;
+
+    renderRelatedPills(null);
+    relLabel.textContent = t("relTitle");
+    relCount.textContent = t("relAfterMini");
+
+    btnPrev.disabled = history.length <= 1;
+
+    if (chkAutoVn.checked && item.hv) {
+      window.requestAnimationFrame(function () {
+        speakVietnamese(item.hv);
+      });
+    }
+
+    updateFavButton();
+  }
+
+  function goToEntry(id, pushHist) {
+    if (id < 0 || id >= entries.length) return;
+    if (currentView === "add") persistFormNotes();
+    if (currentView !== "home") {
+      currentView = "home";
+      localStorage.setItem("kanjiLearnView", "home");
+      refreshTabsActive();
+      document.getElementById("dockNav").style.display = "";
+      document.body.classList.remove("dock-hidden");
+      cancelSpeech();
+    }
+    curId = id;
+    if (pushHist !== false) history.push(id);
+    renderViz();
+  }
+
+  function randomNext() {
+    if (entries.length <= 1) return;
+    var favOnly = chkFavOnly && chkFavOnly.checked;
+    var allowed = null;
+    if (favOnly) {
+      var favWords = loadFavorites();
+      allowed = new Set();
+      favWords.forEach(function (w) {
+        var ix = entryIndexByWord(w);
+        if (ix >= 0) allowed.add(ix);
+      });
+      if (allowed.size === 0) return;
+    }
+    var pool = [];
+    for (var i = 0; i < entries.length; i++) {
+      if (i === curId) continue;
+      if (allowed && !allowed.has(i)) continue;
+      if (!roundSeenIds.has(i)) pool.push(i);
+    }
+    if (pool.length === 0) {
+      roundSeenIds.clear();
+      for (var j = 0; j < entries.length; j++) {
+        if (j === curId) continue;
+        if (allowed && !allowed.has(j)) continue;
+        pool.push(j);
+      }
+    }
+    if (pool.length === 0) return;
+    var pick = pool[(Math.random() * pool.length) | 0];
+    roundSeenIds.add(pick);
+    goToEntry(pick, true);
+  }
+
+  function goPrev() {
+    if (history.length <= 1) return;
+    if (currentView === "add") persistFormNotes();
+    history.pop();
+    curId = history[history.length - 1];
+    renderViz();
+  }
+
+  function isTypingTarget(el) {
+    if (!el || !el.tagName) return false;
+    const tag = el.tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return true;
+    if (el.isContentEditable) return true;
+    return false;
+  }
+
+  document.addEventListener("keydown", function (e) {
+    if (currentView !== "home") return;
+    if (isTypingTarget(e.target)) return;
+    switch (e.key) {
+      case " ":
+        e.preventDefault();
+        randomNext();
+        break;
+      case "ArrowRight":
+      case "ArrowDown":
+        e.preventDefault();
+        randomNext();
+        break;
+      case "ArrowLeft":
+      case "ArrowUp":
+        e.preventDefault();
+        goPrev();
+        break;
+      default:
+        break;
+    }
+  });
+
+  btnPrev.addEventListener("click", function () {
+    goPrev();
+  });
+
+  document.getElementById("btnNext").addEventListener("click", function () {
+    randomNext();
+  });
+
+  document.getElementById("btnFirst").addEventListener("click", function () {
+    roundSeenIds.clear();
+    history = [0];
+    goToEntry(0, false);
+  });
+
+  chkAutoVn.checked = localStorage.getItem("autoVnSpeak") !== "0";
+  chkAutoVn.addEventListener("change", function () {
+    localStorage.setItem("autoVnSpeak", chkAutoVn.checked ? "1" : "0");
+  });
+
+  chkFavOnly.checked = localStorage.getItem("kanjiLearnFavOnly") === "1";
+  chkFavOnly.addEventListener("change", function () {
+    localStorage.setItem("kanjiLearnFavOnly", chkFavOnly.checked ? "1" : "0");
+  });
+
+  document.getElementById("btnSpeakVn").addEventListener("click", function () {
+    var it = entries[curId];
+    if (it && it.hv) speakVietnamese(it.hv);
+  });
+
+  document.getElementById("btnSpeakJa").addEventListener("click", function () {
+    var it = entries[curId];
+    if (it && it.on) speakJapanese(it.on);
+  });
+
+  document.getElementById("zoomOut").addEventListener("click", function () {
+    if (zoomIdx > 0) {
+      zoomIdx--;
+      applyZoom();
+    }
+  });
+  document.getElementById("zoomIn").addEventListener("click", function () {
+    if (zoomIdx < ZOOM_PCTS.length - 1) {
+      zoomIdx++;
+      applyZoom();
+    }
+  });
+
+  searchInput.addEventListener("input", runSearchQuery);
+  searchInput.addEventListener("focus", function () {
+    runSearchQuery();
+  });
+  searchInput.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") closeSearchDropdown();
+    if (e.key === "Enter") {
+      var first = searchDropdown.querySelector(".search-item");
+      if (first) first.click();
+    }
+  });
+  document.addEventListener("click", function (e) {
+    if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+      closeSearchDropdown();
+    }
+  });
+
+  btnToggleFav.addEventListener("click", function () {
+    var it = entries[curId];
+    if (!it) return;
+    var a = loadFavorites();
+    var i = a.indexOf(it.word);
+    if (i >= 0) a.splice(i, 1);
+    else a.push(it.word);
+    saveFavorites(a);
+    updateFavButton();
+    renderFavList();
+  });
+
+  document.getElementById("btnSaveEntry").addEventListener("click", function () {
+    var w = document.getElementById("addWord").value.trim();
+    var hv = document.getElementById("addHv").value.trim();
+    var on = document.getElementById("addOn").value.trim();
+    if (!w) {
+      alert(t("needWordW"));
+      return;
+    }
+    persistFormNotes();
+    var ix = entryIndexByWord(w);
+    if (ix < 0) {
+      if (!hv) {
+        alert(t("needWordHv"));
+        return;
+      }
+      var raw = loadCustomEntries();
+      raw.push({
+        key: "c_" + Date.now() + "_" + ((Math.random() * 1e6) | 0),
+        word: w,
+        hv: hv,
+        on: on,
+      });
+      saveCustomEntries(raw);
+      rebuildMergedState();
+      renderCustomList();
+      renderAllWordList();
+      document.getElementById("metaLine").textContent = t("metaTpl", { n: entries.length });
+      showView("home");
+      goToEntry(entryIndexByWord(w), true);
+      return;
+    }
+    var ent = entries[ix];
+    if (ent.customKey) {
+      var raw2 = loadCustomEntries();
+      for (var i = 0; i < raw2.length; i++) {
+        if (raw2[i].key === ent.customKey) {
+          raw2[i].hv = hv || raw2[i].hv;
+          raw2[i].on = on;
+          break;
+        }
+      }
+      saveCustomEntries(raw2);
+      rebuildMergedState();
+      renderCustomList();
+      renderAllWordList();
+    }
+    document.getElementById("metaLine").textContent = t("metaTpl", { n: entries.length });
+  });
+
+  document.getElementById("btnLoadCurrentWord").addEventListener("click", function () {
+    var it = entries[curId];
+    if (!it) return;
+    loadFormForWord(it.word);
+  });
+
+  var quizAnswerIdx = -1;
+
+  function shuffleArr(a) {
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = (Math.random() * (i + 1)) | 0;
+      var t0 = a[i];
+      a[i] = a[j];
+      a[j] = t0;
+    }
+    return a;
+  }
+
+  function refreshTabsActive() {
+    document.querySelectorAll(".app-tab").forEach(function (b) {
+      b.classList.toggle("active", b.getAttribute("data-view") === currentView);
+    });
+    document.querySelectorAll(".view").forEach(function (v) {
+      v.classList.toggle("active", v.getAttribute("data-view") === currentView);
+    });
+  }
+
+  function showView(v) {
+    if (currentView === "add" && v !== "add") persistFormNotes();
+    currentView = v;
+    localStorage.setItem("kanjiLearnView", v);
+    refreshTabsActive();
+    var dock = document.getElementById("dockNav");
+    if (v === "home") {
+      dock.style.display = "";
+      document.body.classList.remove("dock-hidden");
+      renderViz();
+    } else {
+      dock.style.display = "none";
+      document.body.classList.add("dock-hidden");
+      cancelSpeech();
+    }
+    if (v === "quiz") {
+      nextQuizQuestion();
+    }
+  }
+
+  function twoCharIndices() {
+    var a = [];
+    for (var i = 0; i < entries.length; i++) {
+      if (kanjiChars(entries[i].word).length === 2) a.push(i);
+    }
+    return a;
+  }
+
+  function nextQuizQuestion() {
+    cancelSpeech();
+    var pool = twoCharIndices();
+    var fb = document.getElementById("quizFeedback");
+    var opts = document.getElementById("quizOptions");
+    fb.textContent = "";
+    fb.className = "quiz-feedback";
+    opts.innerHTML = "";
+    if (pool.length < 4) {
+      document.getElementById("quizHvPrompt").textContent = "\u2014";
+      fb.textContent = t("quizNotEnough");
+      return;
+    }
+    var ci = pool[(Math.random() * pool.length) | 0];
+    var correct = entries[ci];
+    var ks = kanjiChars(correct.word);
+    var c1 = ks[0];
+    var c2 = ks[1];
+    var candSet = new Set();
+    function addFrom(ch) {
+      (charIndex[ch] || []).forEach(function (x) {
+        if (x.id !== ci && kanjiChars(entries[x.id].word).length === 2) candSet.add(x.id);
+      });
+    }
+    addFrom(c1);
+    addFrom(c2);
+    var distr = Array.from(candSet);
+    shuffleArr(distr);
+    var picks = [];
+    for (var d = 0; d < distr.length && picks.length < 3; d++) {
+      if (distr[d] !== ci) picks.push(distr[d]);
+    }
+    var tries = 0;
+    while (picks.length < 3 && tries < 600) {
+      tries++;
+      var r = pool[(Math.random() * pool.length) | 0];
+      if (r !== ci && picks.indexOf(r) < 0) picks.push(r);
+    }
+    if (picks.length < 3) {
+      document.getElementById("quizHvPrompt").textContent = "\u2014";
+      fb.textContent = t("quizNotEnough");
+      return;
+    }
+    var choiceIdxs = [ci, picks[0], picks[1], picks[2]];
+    shuffleArr(choiceIdxs);
+    quizAnswerIdx = ci;
+    document.getElementById("quizHvPrompt").textContent = correct.hv;
+    choiceIdxs.forEach(function (ix) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "quiz-opt";
+      b.textContent = entries[ix].word;
+      b.setAttribute("data-idx", String(ix));
+      b.addEventListener("click", function () {
+        if (b.disabled) return;
+        var chose = parseInt(b.getAttribute("data-idx"), 10);
+        var all = opts.querySelectorAll(".quiz-opt");
+        for (var q = 0; q < all.length; q++) {
+          var btn = all[q];
+          btn.disabled = true;
+          var ix2 = parseInt(btn.getAttribute("data-idx"), 10);
+          if (ix2 === quizAnswerIdx) btn.classList.add("correct");
+          else if (btn === b && ix2 !== quizAnswerIdx) btn.classList.add("wrong");
+        }
+        fb.className = "quiz-feedback " + (chose === quizAnswerIdx ? "ok" : "bad");
+        fb.textContent = chose === quizAnswerIdx ? t("quizCorrect") : t("quizWrong");
+      });
+      opts.appendChild(b);
+    });
+    if (document.getElementById("chkQuizAutoSpeak").checked) {
+      window.requestAnimationFrame(function () {
+        speakVietnamese(correct.hv);
+      });
+    }
+  }
+
+  function renderBottomNav() {
+    var qh = document.getElementById("quizBottomNav");
+    var ah = document.getElementById("addBottomNav");
+    qh.innerHTML = "";
+    ah.innerHTML = "";
+    function link(label, view) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.textContent = label;
+      b.addEventListener("click", function () {
+        showView(view);
+      });
+      return b;
+    }
+    qh.appendChild(link(t("navToHome"), "home"));
+    qh.appendChild(link(t("navToAdd"), "add"));
+    ah.appendChild(link(t("navToHome"), "home"));
+    ah.appendChild(link(t("navToQuiz"), "quiz"));
+  }
+
+  function setLang(next) {
+    if (!I18N[next]) return;
+    if (currentView === "add") persistFormNotes();
+    lang = next;
+    localStorage.setItem("kanjiLearnLang", lang);
+    document.documentElement.lang = I18N[lang].htmlLang;
+    document.title = I18N[lang].docTitle;
+    document.querySelectorAll("[data-set-lang]").forEach(function (b) {
+      b.classList.toggle("active", b.getAttribute("data-set-lang") === lang);
+    });
+    document.getElementById("introText").textContent = t("intro");
+    document.getElementById("vizLegend").textContent = t("legend");
+    document.getElementById("btnPrev").textContent = t("btnPrev");
+    document.getElementById("btnNext").textContent = t("btnNext");
+    document.getElementById("btnFirst").textContent = t("btnFirst");
+    document.getElementById("dockHint").textContent = t("dockShortcuts");
+    document.getElementById("metaLine").textContent = t("metaTpl", { n: entries.length });
+    document.getElementById("btnSpeakVn").textContent = t("btnSpeakVn");
+    document.getElementById("btnSpeakJa").textContent = t("btnSpeakJa");
+    document.getElementById("lblAutoVn").textContent = t("lblAutoVn");
+    document.getElementById("zoomOut").setAttribute("title", t("zoomOut"));
+    document.getElementById("zoomIn").setAttribute("title", t("zoomIn"));
+    searchInput.setAttribute("placeholder", t("searchPlaceholder"));
+    document.getElementById("addWord").setAttribute("placeholder", t("addWordPh"));
+    document.getElementById("addHv").setAttribute("placeholder", t("addHvPh"));
+    document.getElementById("addOn").setAttribute("placeholder", t("addOnPh"));
+    document.getElementById("libCustomHint").textContent = t("libCustomHint");
+    document.getElementById("libAllSummary").textContent = t("libAllSummary");
+    document.getElementById("favSectionTitle").textContent = t("favSectionTitle");
+    document.getElementById("favSectionHint").textContent = t("favSectionHint");
+    document.getElementById("lblFavOnly").textContent = t("lblFavOnly");
+    btnToggleFav.setAttribute("title", t("favToggleTitle"));
+    document.getElementById("tabHome").textContent = t("tabHome");
+    document.getElementById("tabQuiz").textContent = t("tabQuiz");
+    document.getElementById("tabAdd").textContent = t("tabAdd");
+    document.getElementById("quizTitle").textContent = t("quizTitle");
+    document.getElementById("quizIntro").textContent = t("quizIntro");
+    document.getElementById("lblQuizAutoSpeak").textContent = t("lblQuizAutoSpeak");
+    document.getElementById("btnQuizReplayHv").textContent = t("btnQuizReplayHv");
+    document.getElementById("btnQuizNext").textContent = t("btnQuizNext");
+    document.getElementById("addPageTitle").textContent = t("addPageTitle");
+    document.getElementById("addPageHint").textContent = t("addPageHint");
+    document.getElementById("labFormWord").textContent = t("labFormWord");
+    document.getElementById("labFormHv").textContent = t("labFormHv");
+    document.getElementById("labFormOn").textContent = t("labFormOn");
+    document.getElementById("labFormJa").textContent = t("labFormJa");
+    document.getElementById("labFormVi").textContent = t("labFormVi");
+    document.getElementById("btnLoadCurrentWord").textContent = t("btnLoadCurrentWord");
+    document.getElementById("btnSaveEntry").textContent = t("btnSaveEntry");
+    renderBottomNav();
+    renderFavList();
+    renderCustomList();
+    renderAllWordList();
+    if (currentView === "home") renderViz();
+    if (currentView === "quiz") nextQuizQuestion();
+  }
+
+  document.querySelectorAll(".app-tab").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      showView(btn.getAttribute("data-view"));
+    });
+  });
+
+  var chkQuizAutoSpeak = document.getElementById("chkQuizAutoSpeak");
+  chkQuizAutoSpeak.checked = localStorage.getItem("kanjiLearnQuizAutoSpeak") !== "0";
+  chkQuizAutoSpeak.addEventListener("change", function () {
+    localStorage.setItem("kanjiLearnQuizAutoSpeak", chkQuizAutoSpeak.checked ? "1" : "0");
+  });
+
+  document.getElementById("btnQuizReplayHv").addEventListener("click", function () {
+    if (quizAnswerIdx < 0 || !entries[quizAnswerIdx]) return;
+    speakVietnamese(entries[quizAnswerIdx].hv);
+  });
+
+  document.getElementById("btnQuizNext").addEventListener("click", function () {
+    nextQuizQuestion();
+  });
+
+  applyZoom();
+  refreshTabsActive();
+  document.getElementById("dockNav").style.display = currentView === "home" ? "" : "none";
+  document.body.classList.toggle("dock-hidden", currentView !== "home");
+  setLang(lang);
+})();
+  </script>
+</body>
+</html>
